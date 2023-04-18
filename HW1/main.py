@@ -168,6 +168,7 @@ for i in range(TEST_COUNT):
         file.write(f'\tmonom exp: {exp}.\n')
         file.write(f'\tmonom coef: {coef}.\n')
         file.write(f'\tp{p} multiplyByMonom: monom.\n')
+        generate_assert(p)
 
     if option == 4:
         p1 = random.randint(1, POLY_COUNT)

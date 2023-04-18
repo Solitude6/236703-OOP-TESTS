@@ -65,7 +65,10 @@ for i in range(TEST_COUNT):
         p1 = random.randint(1, POLY_COUNT)
         p2 = random.randint(1, POLY_COUNT)
         polynoms[p1] = np.polyadd(polynoms[p1], polynoms[p2])
+        polynoms[p2] = np.poly1d([])
         file.write(f'\tp{p1} add: p{p2}.\n')
+        file.write(f'\tp{p2} := PolyStream new.\n')
+
         generate_assert(p1)
         generate_assert(p2)
 

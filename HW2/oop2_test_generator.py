@@ -105,6 +105,7 @@ def test_content(people_list: list[Person]) -> str:
         command += f"\t\t\tit = poop.getFeedByPopular(p{person.id});\n"
         for friend in sorted(person.friends.keys()):
             friend_posts = [post_list[post] for post in people[friend].posts]
+            friend_posts = sorted(friend_posts, key=lambda x: -x.id)
             for post in sorted(friend_posts, key=lambda x: -len(x.likes)):
                 # for post_idx in sorted(people[friend].posts, key=lambda x: post_list[post_idx].likes):
                 command += f"\t\t\tAssert.assertEquals(it.next(), s{post.id});\n"

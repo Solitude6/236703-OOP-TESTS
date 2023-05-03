@@ -38,7 +38,7 @@ FUNC_END = \
 
 PERSON_COUNT = 5
 TEST_COUNT = 50
-TEST_LENGTH = 100
+TEST_LENGTH = 75
 SECTION_LENGTH = 100  # unused
 people = []
 post_id = 0

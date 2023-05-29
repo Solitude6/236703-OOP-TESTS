@@ -63,6 +63,23 @@ testErrors
 		OOPEnum addSwitch.
 	] expectedError: 'can''t add switch functionality to non-Enum class OOPEnum'.
 	
+	self assertError: [
+	    EnumDictionary onEnum: String
+	] expectedError: 'String is not an Enum'.
+	
+	val1 := EnumDictionary onEnum: OOPColor.
+	self assertError: [
+	    val1 setEnum: String.
+	] expectedError: 'the Dictionary''s Enum is already defined with OOPColor'.
+	
+	self assertError: [
+	    val1 setEnum: OOPColor.
+	] expectedError: 'the Dictionary''s Enum is already defined with OOPColor'.
+	
+	self assert: (val1 getEnum = OOPColor).
+	self assertError: [
+	    val1 add: 1->'hel'.
+	] expectedError: 'this EnumDictionary only accepts OOPColor''s values as keys'.
 	! !
 !OOPEnumTester methodsFor: 'initialize-release' stamp: 'e.k 4/18/2023 13:15'!
 testLazy
@@ -73,11 +90,7 @@ testLazy
 (Smalltalk hasClassNamed: #EnumA_valD__) ifTrue: [Smalltalk removeClassNamed: #EnumA_valD__.].
 (Smalltalk hasClassNamed: #EnumA_valE__) ifTrue: [Smalltalk removeClassNamed: #EnumA_valE__.].
 (Smalltalk hasClassNamed: #EnumA_valF__) ifTrue: [Smalltalk removeClassNamed: #EnumA_valF__.].
-(Smalltalk hasClassNamed: #EnumA_valG__) ifTrue: [Smalltalk removeClassNamed: #EnumA_valG__.].
-(Smalltalk hasClassNamed: #EnumA_valH__) ifTrue: [Smalltalk removeClassNamed: #EnumA_valH__.].
-(Smalltalk hasClassNamed: #EnumA_valI__) ifTrue: [Smalltalk removeClassNamed: #EnumA_valI__.].
-(Smalltalk hasClassNamed: #EnumA_valJ__) ifTrue: [Smalltalk removeClassNamed: #EnumA_valJ__.].
-OOPEnum subclass: #EnumA values: {'valA'.'valB'.'valC'.'valD'.'valE'.'valF'.'valG'.'valH'.'valI'.'valJ'} lazyInitialization: true
+OOPEnum subclass: #EnumA values: {'valA'.'valB'.'valC'.'valD'.'valE'.'valF'} lazyInitialization: true
 initialize: ('initialize', (String cr), '  ^self') instanceVariableNames: '' 
 classVariableNames: '' poolDictionaries: '' 
 category: 'OOP3-Tests'.
@@ -99,18 +112,6 @@ EnumA valE.
 ((EnumA_valF__ allInstances size) = 0) ifFalse: [AssertionFailure signal: 'class EnumA_valF__ instance created despite lazy'].
 EnumA valF.
 ((EnumA_valF__ allInstances size) = 1) ifFalse: [ AssertionFailure signal: 'class EnumA_valF__ not created despite call to function'].
-((EnumA_valG__ allInstances size) = 0) ifFalse: [AssertionFailure signal: 'class EnumA_valG__ instance created despite lazy'].
-EnumA valG.
-((EnumA_valG__ allInstances size) = 1) ifFalse: [ AssertionFailure signal: 'class EnumA_valG__ not created despite call to function'].
-((EnumA_valH__ allInstances size) = 0) ifFalse: [AssertionFailure signal: 'class EnumA_valH__ instance created despite lazy'].
-EnumA valH.
-((EnumA_valH__ allInstances size) = 1) ifFalse: [ AssertionFailure signal: 'class EnumA_valH__ not created despite call to function'].
-((EnumA_valI__ allInstances size) = 0) ifFalse: [AssertionFailure signal: 'class EnumA_valI__ instance created despite lazy'].
-EnumA valI.
-((EnumA_valI__ allInstances size) = 1) ifFalse: [ AssertionFailure signal: 'class EnumA_valI__ not created despite call to function'].
-((EnumA_valJ__ allInstances size) = 0) ifFalse: [AssertionFailure signal: 'class EnumA_valJ__ instance created despite lazy'].
-EnumA valJ.
-((EnumA_valJ__ allInstances size) = 1) ifFalse: [ AssertionFailure signal: 'class EnumA_valJ__ not created despite call to function'].
 ! !
 !OOPEnumTester methodsFor: 'initialize-release' stamp: 'e.k 4/18/2023 13:15'!
 testNotLazy
@@ -124,7 +125,8 @@ testNotLazy
 (Smalltalk hasClassNamed: #EnumB_valG__) ifTrue: [Smalltalk removeClassNamed: #EnumB_valG__.].
 (Smalltalk hasClassNamed: #EnumB_valH__) ifTrue: [Smalltalk removeClassNamed: #EnumB_valH__.].
 (Smalltalk hasClassNamed: #EnumB_valI__) ifTrue: [Smalltalk removeClassNamed: #EnumB_valI__.].
-OOPEnum subclass: #EnumB values: {'valA'.'valB'.'valC'.'valD'.'valE'.'valF'.'valG'.'valH'.'valI'} lazyInitialization: false
+(Smalltalk hasClassNamed: #EnumB_valJ__) ifTrue: [Smalltalk removeClassNamed: #EnumB_valJ__.].
+OOPEnum subclass: #EnumB values: {'valA'.'valB'.'valC'.'valD'.'valE'.'valF'.'valG'.'valH'.'valI'.'valJ'} lazyInitialization: false
 initialize: ('initialize', (String cr), '  ^self') instanceVariableNames: '' 
 classVariableNames: '' poolDictionaries: '' 
 category: 'OOP3-Tests'.
@@ -155,6 +157,9 @@ EnumB valH.
 ((EnumB_valI__ allInstances size) = 1) ifFalse: [AssertionFailure signal: 'class EnumB_valI__ instance created despite lazy'].
 EnumB valI.
 ((EnumB_valI__ allInstances size) = 1) ifFalse: [ AssertionFailure signal: 'class EnumB_valI__ not created despite call to function'].
+((EnumB_valJ__ allInstances size) = 1) ifFalse: [AssertionFailure signal: 'class EnumB_valJ__ instance created despite lazy'].
+EnumB valJ.
+((EnumB_valJ__ allInstances size) = 1) ifFalse: [ AssertionFailure signal: 'class EnumB_valJ__ not created despite call to function'].
 ! !
 !OOPEnumTester methodsFor: 'initialize-release' stamp: 'e.k 4/18/2023 13:15'!
 testCompile
@@ -203,73 +208,74 @@ testSwitch
 (Smalltalk hasClassNamed: #EnumD_valC__) ifTrue: [Smalltalk removeClassNamed: #EnumD_valC__.].
 (Smalltalk hasClassNamed: #EnumD_valD__) ifTrue: [Smalltalk removeClassNamed: #EnumD_valD__.].
 (Smalltalk hasClassNamed: #EnumD_valE__) ifTrue: [Smalltalk removeClassNamed: #EnumD_valE__.].
-(Smalltalk hasClassNamed: #EnumD_valF__) ifTrue: [Smalltalk removeClassNamed: #EnumD_valF__.].
-OOPEnum subclass: #EnumD values: {'valA'.'valB'.'valC'.'valD'.'valE'.'valF'} lazyInitialization: false
+OOPEnum subclass: #EnumD values: {'valA'.'valB'.'valC'.'valD'.'valE'} lazyInitialization: false
 initialize: ('initialize', (String cr), '  ^self') instanceVariableNames: '' 
 classVariableNames: '' poolDictionaries: '' 
 category: 'OOP3-Tests'.
 EnumD addSwitch.
-self assert: (EnumD valA switch_case_valA: [^'valA'] default: [^'default'] = 'valA').
-self assert: (EnumD valB switch_case_valB: [^'valB'] default: [^'default'] = 'valB').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valB: [^'valB'] default: [^'default'] = 'valA').
-self assert: (EnumD valC switch_case_valC: [^'valC'] default: [^'default'] = 'valC').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valC: [^'valC'] default: [^'default'] = 'valA').
-self assert: (EnumD valB switch_case_valB: [^'valB'] case_valC: [^'valC'] default: [^'default'] = 'valB').
-self assert: (EnumD valB switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] default: [^'default'] = 'valB').
-self assert: (EnumD valD switch_case_valD: [^'valD'] default: [^'default'] = 'valD').
-self assert: (EnumD valD switch_case_valA: [^'valA'] case_valD: [^'valD'] default: [^'default'] = 'valD').
-self assert: (EnumD valD switch_case_valB: [^'valB'] case_valD: [^'valD'] default: [^'default'] = 'valD').
-self assert: (EnumD valD switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valD: [^'valD'] default: [^'default'] = 'valD').
-self assert: (EnumD valD switch_case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default'] = 'valD').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default'] = 'valA').
-self assert: (EnumD valC switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default'] = 'valC').
-self assert: (EnumD valE switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default'] = 'valE').
-self assert: (EnumD valE switch_case_valE: [^'valE'] default: [^'default'] = 'valE').
-self assert: (EnumD valE switch_case_valA: [^'valA'] case_valE: [^'valE'] default: [^'default'] = 'valE').
-self assert: (EnumD valA switch_case_valB: [^'valB'] case_valE: [^'valE'] default: [^'default'] = 'valA').
-self assert: (EnumD valB switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valE: [^'valE'] default: [^'default'] = 'valB').
-self assert: (EnumD valE switch_case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default'] = 'valE').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default'] = 'valA').
-self assert: (EnumD valE switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default'] = 'valE').
-self assert: (EnumD valE switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default'] = 'valE').
-self assert: (EnumD valA switch_case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valA').
-self assert: (EnumD valE switch_case_valA: [^'valA'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valE').
-self assert: (EnumD valA switch_case_valB: [^'valB'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valA').
-self assert: (EnumD valB switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valB').
-self assert: (EnumD valC switch_case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valC').
-self assert: (EnumD valE switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valE').
-self assert: (EnumD valC switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valC').
-self assert: (EnumD valC switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default'] = 'valC').
-self assert: (EnumD valF switch_case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valF: [^'valF'] default: [^'default'] = 'valA').
-self assert: (EnumD valF switch_case_valB: [^'valB'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valC switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valC switch_case_valC: [^'valC'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valF switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valB switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valF: [^'valF'] default: [^'default'] = 'valB').
-self assert: (EnumD valF switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valF switch_case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valD switch_case_valA: [^'valA'] case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valD').
-self assert: (EnumD valB switch_case_valB: [^'valB'] case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valB').
-self assert: (EnumD valC switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valC switch_case_valC: [^'valC'] case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valA').
-self assert: (EnumD valD switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valD').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valF: [^'valF'] default: [^'default'] = 'valA').
-self assert: (EnumD valF switch_case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valB switch_case_valA: [^'valA'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valB').
-self assert: (EnumD valF switch_case_valB: [^'valB'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valB switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valB').
-self assert: (EnumD valC switch_case_valC: [^'valC'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valF switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valC switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valC switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valA switch_case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valA').
-self assert: (EnumD valF switch_case_valA: [^'valA'] case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valF').
-self assert: (EnumD valE switch_case_valB: [^'valB'] case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valE').
-self assert: (EnumD valA switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valA').
-self assert: (EnumD valD switch_case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valD').
-self assert: (EnumD valC switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valC').
-self assert: (EnumD valD switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF'] default: [^'default'] = 'valD').
-self assert: (EnumD valC switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] case_valF: [^'valF']  = 'valC').
+self assert: ((EnumD valA switch_case_valA: [^'valA'] default: [^'default']) = 'valA').
+self assert: ((EnumD valA switch_case_valB: [^'valB'] default: [^'default']) = 'default').
+self assert: ((EnumD valA switch_case_valA: [^'valA'] case_valB: [^'valB'] default: [^'default']) = 'valA').
+self assert: ((EnumD valA switch_case_valC: [^'valC'] default: [^'default']) = 'default').
+self assert: ((EnumD valC switch_case_valA: [^'valA'] case_valC: [^'valC'] default: [^'default']) = 'valC').
+self assert: ((EnumD valA switch_case_valB: [^'valB'] case_valC: [^'valC'] default: [^'default']) = 'default').
+self assert: ((EnumD valA switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] default: [^'default']) = 'valA').
+self assert: ((EnumD valD switch_case_valD: [^'valD'] default: [^'default']) = 'valD').
+self assert: ((EnumD valA switch_case_valA: [^'valA'] case_valD: [^'valD'] default: [^'default']) = 'valA').
+self assert: ((EnumD valA switch_case_valB: [^'valB'] case_valD: [^'valD'] default: [^'default']) = 'default').
+self assert: ((EnumD valD switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valD: [^'valD'] default: [^'default']) = 'valD').
+self assert: ((EnumD valC switch_case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default']) = 'valC').
+self assert: ((EnumD valA switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default']) = 'valA').
+self assert: ((EnumD valB switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default']) = 'valB').
+self assert: ((EnumD valC switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] default: [^'default']) = 'valC').
+self assert: ((EnumD valE switch_case_valE: [^'valE'] default: [^'default']) = 'valE').
+self assert: ((EnumD valA switch_case_valA: [^'valA'] case_valE: [^'valE'] default: [^'default']) = 'valA').
+self assert: ((EnumD valB switch_case_valB: [^'valB'] case_valE: [^'valE'] default: [^'default']) = 'valB').
+self assert: ((EnumD valB switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valE: [^'valE'] default: [^'default']) = 'valB').
+self assert: ((EnumD valA switch_case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default']) = 'default').
+self assert: ((EnumD valB switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default']) = 'default').
+self assert: ((EnumD valC switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default']) = 'valC').
+self assert: ((EnumD valC switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valE: [^'valE'] default: [^'default']) = 'valC').
+self assert: ((EnumD valD switch_case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default']) = 'valD').
+self assert: ((EnumD valD switch_case_valA: [^'valA'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default']) = 'valD').
+self assert: ((EnumD valE switch_case_valB: [^'valB'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default']) = 'valE').
+self assert: ((EnumD valE switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default']) = 'valE').
+self assert: ((EnumD valE switch_case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default']) = 'valE').
+self assert: ((EnumD valA switch_case_valA: [^'valA'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default']) = 'valA').
+self assert: ((EnumD valA switch_case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] default: [^'default']) = 'default').
+self assert: ((EnumD valD switch_case_valA: [^'valA'] case_valB: [^'valB'] case_valC: [^'valC'] case_valD: [^'valD'] case_valE: [^'valE'] ) = 'valD').
+! !
+!OOPEnumTester methodsFor: 'initialize-release' stamp: 'e.k 4/18/2023 13:15'!
+testDictionaryEnum
+| dict |
+(Smalltalk hasClassNamed: #EnumE) ifTrue: [Smalltalk removeClassNamed: #EnumE.].
+(Smalltalk hasClassNamed: #EnumE_valA__) ifTrue: [Smalltalk removeClassNamed: #EnumE_valA__.].
+(Smalltalk hasClassNamed: #EnumE_valB__) ifTrue: [Smalltalk removeClassNamed: #EnumE_valB__.].
+(Smalltalk hasClassNamed: #EnumE_valC__) ifTrue: [Smalltalk removeClassNamed: #EnumE_valC__.].
+(Smalltalk hasClassNamed: #EnumE_valD__) ifTrue: [Smalltalk removeClassNamed: #EnumE_valD__.].
+(Smalltalk hasClassNamed: #EnumE_valE__) ifTrue: [Smalltalk removeClassNamed: #EnumE_valE__.].
+OOPEnum subclass: #EnumE values: {'valA'.'valB'.'valC'.'valD'.'valE'} lazyInitialization: false
+initialize: ('initialize', (String cr), '  ^self') instanceVariableNames: '' 
+classVariableNames: '' poolDictionaries: '' 
+category: 'OOP3-Tests'.
+dict := EnumDictionary onEnum: EnumE.
+dict add: EnumE valA -> 'LxRluVFMkJ'.
+self assert: (dict at: EnumE valA) = 'LxRluVFMkJ'.
+dict add: EnumE valB -> 'fEPADonfUn'.
+self assert: (dict at: EnumE valB) = 'fEPADonfUn'.
+dict add: EnumE valC -> 'xtmxKinxuF'.
+self assert: (dict at: EnumE valB) = 'fEPADonfUn'.
+dict add: EnumE valE -> 'vFpJhidwLm'.
+self assert: (dict at: EnumE valC) = 'xtmxKinxuF'.
+dict add: EnumE valD -> 'sGCqgoYrnO'.
+self assert: (dict at: EnumE valB) = 'fEPADonfUn'.
+dict removeKey: EnumE valE.
+self assert: (dict at: EnumE valC) = 'xtmxKinxuF'.
+dict removeKey: EnumE valA.
+self assert: (dict at: EnumE valD) = 'sGCqgoYrnO'.
+dict removeKey: EnumE valD.
+self assert: (dict at: EnumE valC) = 'xtmxKinxuF'.
+dict removeKey: EnumE valC.
+self assert: (dict at: EnumE valB) = 'fEPADonfUn'.
+dict removeKey: EnumE valB.
 ! !

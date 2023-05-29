@@ -1,4 +1,7 @@
 import random
+import string
+import copy
+
 from classes import *
 FILE_START = """TestCase subclass: #OOPEnumTester
 	instanceVariableNames: ''
@@ -65,6 +68,23 @@ testErrors
 		OOPEnum addSwitch.
 	] expectedError: 'can''t add switch functionality to non-Enum class OOPEnum'.
 	
+	self assertError: [
+	    EnumDictionary onEnum: String
+	] expectedError: 'String is not an Enum'.
+	
+	val1 := EnumDictionary onEnum: OOPColor.
+	self assertError: [
+	    val1 setEnum: String.
+	] expectedError: 'the Dictionary''s Enum is already defined with OOPColor'.
+	
+	self assertError: [
+	    val1 setEnum: OOPColor.
+	] expectedError: 'the Dictionary''s Enum is already defined with OOPColor'.
+	
+	self assert: (val1 getEnum = OOPColor).
+	self assertError: [
+	    val1 add: 1->'hel'.
+	] expectedError: 'this EnumDictionary only accepts OOPColor''s values as keys'.
 	! !
 """
 FILE_END = '! !'
@@ -173,10 +193,43 @@ def check_switch():
         no = [val for val in new_enum.values if val not in vals]
         used_val = vals[used_index] if used_index != -1 \
             else no[0]
-        cmd += f"self assert: ({new_enum.name} {used_val} " + curr_switch + f" = '{used_val}').\n"
+        cmd += f"self assert: (({new_enum.name} {used_val} " + curr_switch + f") = '{used_val if used_index != -1 else 'default'}').\n"
 
         i += 1
     return cmd
+
+
+def check_dict_validity(dic, enum):
+    key = list(dic.keys())[random.randint(0, len(dic.keys()) - 1)]
+    cmd = f"self assert: (dict at: {enum.name} {key}) = '{dic[key]}'.\n"
+    return cmd
+
+
+def check_dict_enum():
+    cmd = '| dict |\n'
+    cmd += generate_enum()
+    new_enum = enums[-1]
+    cmd += f"dict := EnumDictionary onEnum: {new_enum.name}.\n"
+    dic = dict()
+    rem_vals = copy.copy(new_enum.values)
+    while rem_vals:
+        value = rem_vals[random.randint(0, len(rem_vals) - 1)]
+        rem_vals.remove(value)
+        new_val = ''.join(random.choices(string.ascii_letters, k=10)) #+ "'"
+        dic[value] = new_val
+        cmd += f"dict add: {new_enum.name} {value} -> '{new_val}'.\n"
+        cmd += check_dict_validity(dic, new_enum)
+
+    rem_vals = copy.copy(new_enum.values)
+    while rem_vals:
+        curr = rem_vals[random.randint(0, len(rem_vals) - 1)]
+        rem_vals.remove(curr)
+        dic.pop(curr)
+        cmd += f"dict removeKey: {new_enum.name} {curr}.\n"
+        if dic: cmd += check_dict_validity(dic, new_enum)
+
+    return cmd
+
 
 
 file = open('OOP3-Tests.st', 'w')
@@ -185,5 +238,6 @@ file.write(FUNC_START + 'Lazy\n' + check_lazy() + FUNC_END)
 file.write(FUNC_START + 'NotLazy\n' + check_not_lazy() + FUNC_END)
 file.write(FUNC_START + 'Compile\n' + check_compile() + FUNC_END)
 file.write(FUNC_START + 'Switch\n' + check_switch() + FUNC_END)
+file.write(FUNC_START + 'DictionaryEnum\n' + check_dict_enum() + FUNC_END)
 file.close()
 #check_lazy()
